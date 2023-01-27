@@ -1,0 +1,66 @@
+var inp = document.getElementsByTagName("input")
+console.log(inp[3].type)
+var getfile
+var upload = document.getElementById("upload")
+var imgurl =""
+
+inp[3].addEventListener("click", function () {
+    inp[3].onchange = e => {
+        console.log(e.target.files[0])
+        getfile = e.target.files[0]
+        upload.removeAttribute("disabled")
+    }
+})
+
+upload.addEventListener("click", async function () {
+    event.preventDefault()
+    console.log(getfile.name)
+    var strg = firebase.storage().ref()
+    var uploadTask = strg.child(`images/${getfile.name}`)
+        .put(getfile)
+
+    uploadTask.on('state_changed',
+        (sna) => {
+
+            var progress = (sna.bytesTransferred / sna.totalBytes) * 100;
+
+
+            if (progress == 0) {
+
+                alert("Upload Process Start\n Plz Wait For Upload Image In Data Base")
+            }
+
+
+            if (progress == 100) {
+
+                alert("Upload Process Finish \n Successfully Upload Image In Data Base")
+            }
+
+        },
+        (error) => {
+
+        },
+        () => {
+
+            uploadTask.snapshot.ref.getDownloadURL().then((down) => {
+                imgurl = downloadURL;
+                console.log('File available at', down);
+
+            });
+        }
+    );
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
